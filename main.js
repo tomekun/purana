@@ -21,7 +21,6 @@ const server = require('./server.js');
 
 const DISCOVERY_URL = 'https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1';
 const API_KEY = process.env['PERSPECTIVE_KEY'];//GoogleCloudのToken
-const Y_API_KEY =  process.env['YOUTUBE_DATA_API'];
 const { google } = require('googleapis');
 
 //Discord
