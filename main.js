@@ -4,9 +4,6 @@ const { promises: fsPromises, ...fs } = require('fs');
 var request = require('request');
 const path = require("path")
 require('dotenv').config();
-const sqlite3 = require('sqlite3').verbose();
-const axios = require('axios');
-const cheerio = require('cheerio');
 
 
 //ファイルの読み込み
@@ -168,7 +165,7 @@ client.on('interactionCreate', async interaction => {
       const threshold = 0.7; // この値は適切な閾値に調整
       if (toxicityScore >= threshold) {
   
-        message.channel.send(`<@!${message.member.user.id}>先生！ちょっと言動がひどいと思いますよ？`);
+        message.channel.send(`<@!${message.member.user.id}>先生...ちょっと言動がひどいと思います。`);
   
       }
       if (toxicityScore >= threshold) {
@@ -180,55 +177,7 @@ client.on('interactionCreate', async interaction => {
     }
   });//誹謗中傷防止
   
-  client.on('messageCreate', async (message) => {
-    // 現在の日本時間を取得
-    const japanTime = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-    const japanDate = new Date(japanTime);
-    const hours = japanDate.getHours();
-    const minutes = japanDate.getMinutes();
 
-    // 現在時刻に2時間を加えて、24時間を超える場合は調整する
-    let time;
-    if (hours + 2 >= 24) {
-        time = `${hours + 2 - 24}:${String(minutes).padStart(2, '0')}`;
-    } else {
-        time = `${hours + 2}:${String(minutes).padStart(2, '0')}`;
-    }
-
-    // Embedがないメッセージは無視する
-    if (message.embeds.length === 0) return;
-
-    // Embedのタイトルが指定したものであるかをチェックする
-    if (message.embeds[0].title === 'DISBOARD: Discordサーバー掲示板') {
-        try {
-            // メッセージに返信して通知する
-            await message.channel.send('/bumpを検知しました！');
-            await message.channel.send('2時間後にお知らせしますね！');
-
-            // ファイルから既存のデータを読み込む
-            let bumpData = {};
-            try {
-                const data = await fsPromises.readFile(`data/bumpData.json`, 'utf8');
-                bumpData = JSON.parse(data);
-            } catch (error) {
-                // ファイルが存在しない場合や読み込みエラーが発生した場合に備えて、空のオブジェクトを使用します
-                console.error('Error reading bumpData.json:', error);
-            }
-
-            // 新しいデータを既存のデータに追加
-            bumpData[message.guild.id] = {
-                "oid": `${message.guild.ownerId}`,
-                "cid": `${message.channel.id}`,
-                "time": `${time}`
-            };
-
-            // 更新されたデータをファイルに書き込む
-            await fsPromises.writeFile(`data/bumpData.json`, JSON.stringify(bumpData, null, 2));
-        } catch (error) {
-            console.error('Error processing /bump:', error);
-        }
-    }
-});//bump
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
   if(newState.guild.id === "1065321622736732250")return;
