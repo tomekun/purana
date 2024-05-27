@@ -1,3 +1,4 @@
+const fs = require("fs")
 function register(client,clientId,Collection,REST,Routes,path,fs) {
     client.commands = new Collection();
   
